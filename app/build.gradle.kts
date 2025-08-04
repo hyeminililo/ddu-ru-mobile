@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ddu_ru_mobile"
+    namespace = "com.gildongmu.ddu_ru_mobile"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.ddu_ru_mobile"
+        applicationId = "com.gildongmu.ddu_ru_mobile"
         minSdk = 34
         targetSdk = 35
         versionCode = 1
@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
