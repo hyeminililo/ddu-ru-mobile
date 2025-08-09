@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Ddu-ru-mobile</string>
+    <string name="hint_nickname">닉네임을 입력해주세요</string>
+    <string name="sub_hint_nickname">사용할 닉네임을 알려주세요</string>
+    <string name="guide_message">가입을 위한 정보를 입력해주세요</string>
+    <string name="submitted">완료</string>
 </resources>
+
