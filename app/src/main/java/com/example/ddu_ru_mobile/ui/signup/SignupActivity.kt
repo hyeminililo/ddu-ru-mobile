@@ -9,6 +9,8 @@ import com.google.android.material.button.MaterialButton
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
+import android.content.Intent
+import com.example.ddu_ru_mobile.ui.signup.TravelTestDialog
 import com.gildongmu.ddu_ru_mobile.R
 
 class SignupActivity : AppCompatActivity() {
@@ -41,8 +43,13 @@ class SignupActivity : AppCompatActivity() {
 
         btnDone.setOnClickListener {
             val nickname = nicknameEdit.text?.toString()?.replace("\\s".toRegex(), "") ?: ""
+            // 니중에 토큰으로 대체
+            val userId = ""
             if (nickname.isNotEmpty()) {
+
                 // TODO: 원하는 동작 (서버로 전송 등)
+                TravelTestDialog().show(supportFragmentManager, "TravelTestDialog")
+
             }
         }
     }
