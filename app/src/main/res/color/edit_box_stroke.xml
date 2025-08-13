@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 포커스 -->
-    <item android:state_focused="true" android:color="#FFA100"/>
-    <!-- 기본 -->
-    <item android:color="#CCCCCC"/>
-</selector>
