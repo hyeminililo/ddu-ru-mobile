@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/GradientRoundBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+    <ImageView
+        android:id="@+id/img_suitcase"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/travel_preference_sticker" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="여행 취향 테스트에 참여해주세요!"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="여행 취향을 공개하면 상대방이 ○○○님의 여행 취향을 알 수 있어요.\n여행 동행 매칭을 할 때에도 더 잘 맞는 상대를 만날 수 있을거예요!"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnLater"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#DDDDDD"
+            android:text="나중에 하기"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FFA100"
+            android:text="시작하기"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>
