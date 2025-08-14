@@ -1,5 +1,0 @@
-<resources>
-    <style name="GradientRoundBackground">
-        <item name="android:background">@drawable/rectangle</item>
-    </style>
-</resources>
