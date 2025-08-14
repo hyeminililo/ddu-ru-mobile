@@ -9,7 +9,7 @@ import com.google.android.material.button.MaterialButton
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
-import android.content.Intent
+
 import com.example.ddu_ru_mobile.ui.signup.TravelTestDialog
 import com.gildongmu.ddu_ru_mobile.R
 

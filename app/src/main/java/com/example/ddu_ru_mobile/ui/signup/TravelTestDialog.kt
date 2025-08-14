@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.gildongmu.ddu_ru_mobile.R
-import com.gildongmu.ddu_ru_mobile.ui.signup.SurveyActivity
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class TravelTestDialog : BottomSheetDialogFragment(){
@@ -23,7 +23,7 @@ class TravelTestDialog : BottomSheetDialogFragment(){
         }
 
         view.findViewById<Button>(R.id.btnStart).setOnClickListener {
-
+            dismiss()
             startActivity(Intent(requireContext(), SurveyActivity::class.java))
 
         }
