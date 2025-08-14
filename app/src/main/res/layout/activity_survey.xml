@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- 상단 타이틀 -->
+    <TextView
+        android:id="@+id/tvSurveyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="설문조사"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#C3C3C3"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/tvLater"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="나중에 할래요"
+        android:textColor="#C3C3C3"
+        android:textSize="14sp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"
+        />
+
+    <!-- 진행바 (커스텀 View 가능, 여기선 심플 바) -->
+    <View
+        android:id="@+id/progressBar"
+        android:layout_width="100dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="36dp"
+        android:background="@color/mainColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSurveyTitle"
+        android:layout_marginStart="16dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="36dp"
+        android:background="#FFF4DB"
+        app:layout_constraintStart_toEndOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSurveyTitle"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- 질문 -->
+    <TextView
+        android:id="@+id/tvQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="○○○님의 여행 스타일이 궁금해요"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="36dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- 설명 -->
+    <TextView
+        android:id="@+id/tvSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="둘 중 더 선호하는 여행 스타일을 골라주세요"
+        android:textColor="#5B5B5B"
+        android:textSize="12sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvQuestion"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- 첫번째(활성) 선택 버튼 -->
+    <Button
+        android:id="@+id/btnChoice1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="#FFA100"
+        android:text="게스트 하우스 같은 곳에서 새로운 사람들과 재미있게 놀고 싶어!"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tvSub"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 두번째(비활성) 선택 버튼 -->
+    <Button
+        android:id="@+id/btnChoice2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="#F3F3F3"
+        android:text="우리끼리 편하고 프라이빗하게 쉴래"
+        android:textColor="#C3C3C3"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/btnChoice1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 이전 버튼 -->
+    <Button
+        android:id="@+id/btnPrev"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#E7E7E7"
+        android:text="이전"
+        android:textColor="#A9A9A9"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/btnChoice2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
