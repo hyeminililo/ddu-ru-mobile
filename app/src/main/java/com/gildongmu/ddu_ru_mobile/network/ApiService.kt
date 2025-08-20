@@ -1,8 +1,8 @@
-package com.example.ddu_ru_mobile.network
+package com.gildongmu.ddu_ru_mobile.network
 
 
-import com.example.ddu_ru_mobile.model.signup.api.TravelPreferenceRequest
-import com.example.ddu_ru_mobile.model.signup.api.TravelPreferenceResponse
+import com.gildongmu.ddu_ru_mobile.model.signup.api.TravelPreferenceRequest
+import com.gildongmu.ddu_ru_mobile.model.signup.api.TravelPreferenceResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

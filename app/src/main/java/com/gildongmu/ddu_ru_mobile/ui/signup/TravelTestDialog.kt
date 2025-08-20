@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.signup
+package com.gildongmu.ddu_ru_mobile.ui.signup
 
 import android.content.Intent
 import android.os.Bundle

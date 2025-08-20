@@ -23,7 +23,7 @@
             android:name=".ui.signup.SignupActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.example.ddu_ru_mobile.ui.signup.SurveyActivity"
+            android:name=".ui.signup.SurveyActivity"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

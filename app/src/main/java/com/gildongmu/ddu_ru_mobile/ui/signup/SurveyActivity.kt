@@ -1,11 +1,11 @@
-package com.example.ddu_ru_mobile.ui.signup
+package com.gildongmu.ddu_ru_mobile.ui.signup
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ddu_ru_mobile.model.signup.survey.Survey
-import com.example.ddu_ru_mobile.model.signup.survey.SurveyList
+import com.gildongmu.ddu_ru_mobile.model.signup.survey.Survey
+import com.gildongmu.ddu_ru_mobile.model.signup.survey.SurveyList
 import com.gildongmu.ddu_ru_mobile.R
 
 class SurveyActivity : AppCompatActivity() {

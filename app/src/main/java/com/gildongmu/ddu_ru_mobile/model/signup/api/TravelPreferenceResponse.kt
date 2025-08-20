@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.model.signup.api
+package com.gildongmu.ddu_ru_mobile.model.signup.api
 
 
 // Todo 아마 code일거라 바꿀 수도 ?

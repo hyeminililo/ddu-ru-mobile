@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.model.signup.survey
+package com.gildongmu.ddu_ru_mobile.model.signup.survey
 
 class SurveyList {
     val surveyList = listOf(

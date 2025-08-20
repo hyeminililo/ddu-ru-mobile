@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.network
+package com.gildongmu.ddu_ru_mobile.network
 
 import com.gildongmu.ddu_ru_mobile.BuildConfig
 import retrofit2.Retrofit
