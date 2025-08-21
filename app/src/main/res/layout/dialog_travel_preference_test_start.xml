@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="여행 취향을 공개하면 상대방이 ○○○님의 여행 취향을 알 수 있어요.\n여행 동행 매칭을 할 때에도 더 잘 맞는 상대를 만날 수 있을거예요!"
+        android:text="여행 취향을 공개하면 상대방이 홍길동님의 여행 취향을 알 수 있어요.\n여행 동행 매칭을 할 때에도 더 잘 맞는 상대를 만날 수 있을거예요!"
         android:textSize="13sp" />
 
     <LinearLayout

@@ -5,6 +5,9 @@
     <string name="guide_message">가입을 위한 정보를 입력해주세요</string>
     <string name="submitted">완료</string>
     <string name="back">뒤로</string>
+    <string name="option">옵션</string>
+    <string name="survey_guide_name">(%1$d/%2$d)님의 여행 스타일이 궁금해요</string>
+
 
 </resources>
 

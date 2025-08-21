@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,19 +45,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.97" />
 
-    <!-- 상단 타이틀 -->
-    <TextView
-        android:id="@+id/tvSurveyTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="설문조사"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#C3C3C3"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
 
     <TextView
@@ -69,30 +57,57 @@
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        />
-
-    <!-- 진행바 (커스텀 View 가능, 여기선 심플 바) -->
-    <View
-        android:id="@+id/progressBar"
-        android:layout_width="100dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="36dp"
-        android:background="@color/mainColor"
+        android:layout_marginHorizontal="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvQuestion"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSurveyTitle"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="36dp"
-        android:background="#FFF4DB"
-        app:layout_constraintStart_toEndOf="@id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSurveyTitle"
-        android:layout_marginEnd="16dp"/>
 
-      <!-- 설문 질문 -->
+    <!-- 진행률 표시 -->
+    <LinearLayout
+        android:id="@+id/progressBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/tvQuestion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progressBarMain"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4"
+            android:max="100"
+            tools:progress="60"/>
+
+        <TextView
+            android:id="@+id/textViewDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0%"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="100%" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvQuestion"
         android:layout_width="wrap_content"
@@ -102,15 +117,17 @@
         android:textStyle="bold"
         android:layout_marginTop="36dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressBarLayout"
         app:layout_constraintStart_toStartOf="parent"/>
+
+
 
     <Button
         android:id="@+id/btnChoice1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTint="#FFA100"
-        android:text="첫 번째 선택지"
+        android:text="@string/option"
         android:textColor="@android:color/white"
         android:textSize="15sp"
         android:textStyle="bold"
@@ -125,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTint="#F3F3F3"
-        android:text="두 번째 선택지"
+        android:text="@string/option"
         android:textColor="#C3C3C3"
         android:textSize="15sp"
         android:textStyle="normal"
@@ -138,7 +155,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTint="#E7E7E7"
-        android:text="이전"
+        android:text="@string/back"
         android:textColor="#A9A9A9"
         android:textSize="15sp"
         android:textStyle="bold"
@@ -148,5 +165,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline5"
         app:layout_constraintBottom_toBottomOf="@+id/guideline6"
         android:gravity="center"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
