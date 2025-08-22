@@ -81,7 +81,7 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tvQuestion"
+        app:layout_constraintTop_toBottomOf="@id/tvLater"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -95,17 +95,6 @@
             android:max="100"
             tools:progress="60"/>
 
-        <TextView
-            android:id="@+id/textViewDownload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="0%"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:text="100%" />
     </LinearLayout>
 
     <TextView
@@ -150,22 +139,35 @@
         app:layout_constraintBottom_toBottomOf="@+id/guideline4"
         android:gravity="center"/>
 
-    <Button
+    <ImageView
         android:id="@+id/btnPrev"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_back_ios"
+        android:contentDescription="이전으로"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- 완료 버튼 (마지막 설문에서 표시) -->
+    <Button
+        android:id="@+id/btnComplete"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:backgroundTint="#E7E7E7"
-        android:text="@string/back"
-        android:textColor="#A9A9A9"
+        android:backgroundTint="#FFA100"
+        android:text="완료"
+        android:textColor="@android:color/white"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/btnChoice2"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/guideline5"
+        app:layout_constraintBottom_toBottomOf="@id/guideline6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline5"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline6"
         android:gravity="center"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
