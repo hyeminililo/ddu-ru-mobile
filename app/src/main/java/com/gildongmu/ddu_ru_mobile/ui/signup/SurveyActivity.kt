@@ -130,14 +130,14 @@ class SurveyActivity : AppCompatActivity() {
     private fun setSelectedStyle(selected: Button, other: Button) {
         selected.backgroundTintList = getColorStateList(R.color.mainColor)
         selected.setTextColor(getColor(android.R.color.white))
-        other.backgroundTintList = getColorStateList(android.R.color.darker_gray)
+        other.backgroundTintList = getColorStateList(R.color.gray)
         other.setTextColor(getColor(android.R.color.black))
     }
 
     private fun resetChoiceStyles() {
-        btnChoice1.backgroundTintList = getColorStateList(android.R.color.darker_gray)
+        btnChoice1.backgroundTintList = getColorStateList(R.color.gray)
         btnChoice1.setTextColor(getColor(android.R.color.black))
-        btnChoice2.backgroundTintList = getColorStateList(android.R.color.darker_gray)
+        btnChoice2.backgroundTintList = getColorStateList(R.color.gray)
         btnChoice2.setTextColor(getColor(android.R.color.black))
     }
 

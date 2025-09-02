@@ -65,7 +65,7 @@ class LastSurveyController(private val recyclerView: RecyclerView,
         } else {
             btnComplete.background =
                 btnComplete.context.getDrawable(R.drawable.button_complete_disabled)
-            btnComplete.setTextColor(btnComplete.context.getColor(android.R.color.darker_gray))
+            btnComplete.setTextColor(btnComplete.context.getColor(R.color.gray))
         }
     }
 }

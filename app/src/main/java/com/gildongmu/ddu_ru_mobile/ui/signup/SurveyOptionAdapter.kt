@@ -54,7 +54,7 @@ class SurveyOptionAdapter(
                 button.backgroundTintList = ctx.getColorStateList(R.color.mainColor)
                 button.setTextColor(ctx.getColor(android.R.color.white))
             } else {
-                button.backgroundTintList = ctx.getColorStateList(android.R.color.darker_gray)
+                button.backgroundTintList = ctx.getColorStateList(R.color.gray)
                 button.setTextColor(ctx.getColor(android.R.color.black))
             }
         }
