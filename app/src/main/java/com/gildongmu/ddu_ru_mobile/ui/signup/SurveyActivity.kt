@@ -4,19 +4,23 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.gildongmu.ddu_ru_mobile.R
-import com.gildongmu.ddu_ru_mobile.model.signup.survey.Survey
+import com.gildongmu.ddu_ru_mobile.model.signup.api.SurveyViewModel
+import com.gildongmu.ddu_ru_mobile.model.signup.survey.SurveyElements
 import com.gildongmu.ddu_ru_mobile.model.signup.survey.SurveyList
 
 class SurveyActivity : AppCompatActivity() {
+    private val surveyViewModel: SurveyViewModel by viewModels()
 
     private var currentIndex = 0 // 현재 설문 항목의 인덱스
     private lateinit var progressBar: ProgressBar
@@ -28,7 +32,10 @@ class SurveyActivity : AppCompatActivity() {
     private lateinit var btnComplete: Button
     private val handler = Handler(Looper.getMainLooper())
 
-    // list_survey.xml의 버튼들
+    // 마지막 설문(9번)에서 선택된 여행 활동들을 저장 (UI용)
+    private val selectedTravelActivities = mutableSetOf<String>()
+
+    // list_survey.xml의 버튼들 (사용하지 않음 - RecyclerView로 대체)
     private lateinit var btnSightseeing: Button
     private lateinit var btnExhibition: Button
     private lateinit var btnNature: Button
@@ -39,20 +46,22 @@ class SurveyActivity : AppCompatActivity() {
     private lateinit var btnAmusementPark: Button
     private lateinit var btnFestival: Button
 
-    // 선택된 여행 활동들을 저장
-    private val selectedTravelActivities = mutableSetOf<String>()
+    // 설문 목록을 한 번만 생성하고 재사용
+    private val surveyList = SurveyList().surveyList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survey)
         initializeViews()
 
-        val surveyList = SurveyList().surveyList
         progressBar.progressTintList =
-                ColorStateList.valueOf(ContextCompat.getColor(this, R.color.mainColor))
+            ColorStateList.valueOf(ContextCompat.getColor(this, R.color.mainColor))
 
         // 첫 번째 설문 데이터를 표시
         updateSurvey(surveyList[currentIndex])
+
+        // ViewModel 상태 관찰
+        observeViewModel()
 
         // 이전 버튼 클릭 시
         btnPrev.setOnClickListener {
@@ -66,13 +75,30 @@ class SurveyActivity : AppCompatActivity() {
         btnChoice1.setOnClickListener {
             setSelectedButtonStyle(btnChoice1) // 선택된 버튼 스타일 변경
             // 0.5초 후에 다음 설문으로 이동 (색상 변경이 보이도록)
-            handler.postDelayed({ handleChoice(0) }, 500)
+            handler.postDelayed(
+                {
+                    Log.d("[======currentIndex]", "[$currentIndex]")
+                    val currentSurvey = surveyList[currentIndex]
+                    surveyViewModel.setSingleOption(0, currentSurvey)
+                    handleChoice(0)
+                    Log.d("[======currentIndex]", "[$currentIndex]")
+                },
+                500
+            )
         }
 
         btnChoice2.setOnClickListener {
             setSelectedButtonStyle(btnChoice2) // 선택된 버튼 스타일 변경
             // 0.5초 후에 다음 설문으로 이동 (색상 변경이 보이도록)
-            handler.postDelayed({ handleChoice(1) }, 500)
+
+            handler.postDelayed(
+                {
+                    val currentSurvey = surveyList[currentIndex]
+                    surveyViewModel.setSingleOption(1, currentSurvey)
+                    handleChoice(1)
+                },
+                500
+            )
         }
     }
 
@@ -105,9 +131,8 @@ class SurveyActivity : AppCompatActivity() {
     }
 
     private fun handleChoice(choiceIndex: Int) {
-        val surveyList = SurveyList().surveyList
-        //        if (currentIndex < surveyList.size - 1) {
-        if (currentIndex < surveyList.size) {
+        // 아직 다음 설문이 남아있으면 다음 설문으로 이동
+        if (currentIndex < surveyList.size - 1) {
             currentIndex++
             updateSurvey(surveyList[currentIndex])
         } else {
@@ -117,13 +142,13 @@ class SurveyActivity : AppCompatActivity() {
     }
 
     // 설문 항목 업데이트 함수
-    private fun updateSurvey(surveyItem: Survey) {
+    private fun updateSurvey(surveyItem: SurveyElements) {
 
         tvQuestion.text = surveyItem.question
 
         if (surveyItem.options.size > 2) {
             // 마지막 설문 (여행 활동 선택) - RecyclerView 사용
-            android.util.Log.d("SurveyActivity", "마지막 설문 (여행 활동 선택) - RecyclerView 표시")
+            Log.d("SurveyActivity", "마지막 설문 (여행 활동 선택) - RecyclerView 표시")
             showRecyclerView(surveyItem.options)
             hideChoiceButtons()
             showCompleteButton() // 완료 버튼 표시
@@ -143,7 +168,7 @@ class SurveyActivity : AppCompatActivity() {
         // 진행률 업데이트
         updateProgress()
     }
-
+// 이게 뭘까?
     private fun showRecyclerView(options: List<String>) {
         android.util.Log.d("SurveyActivity", "showRecyclerView 호출됨, options: $options")
 
@@ -153,10 +178,10 @@ class SurveyActivity : AppCompatActivity() {
 
             // SurveyOptionAdapter를 사용하여 RecyclerView 설정
             val adapter =
-                    SurveyOptionAdapter(options) { option ->
-                        // 옵션 선택 시 처리
-                        handleTravelActivitySelection(option)
-                    }
+                SurveyOptionAdapter(options) { option ->
+                    // 옵션 선택 시 처리
+                    handleTravelActivitySelection(option)
+                }
 
             recyclerView.adapter = adapter
             // 3열 그리드 레이아웃 설정
@@ -176,8 +201,8 @@ class SurveyActivity : AppCompatActivity() {
             // 이미 선택된 경우: 선택 해제
             selectedTravelActivities.remove(option)
             android.util.Log.d(
-                    "SurveyActivity",
-                    "선택 해제: $option (현재 ${selectedTravelActivities.size}개)"
+                "SurveyActivity",
+                "선택 해제: $option (현재 ${selectedTravelActivities.size}개)"
             )
 
             // progress 복구 (3개 미만이 되면)
@@ -187,15 +212,16 @@ class SurveyActivity : AppCompatActivity() {
             if (selectedTravelActivities.size < 3) {
                 selectedTravelActivities.add(option)
                 android.util.Log.d(
-                        "SurveyActivity",
-                        "선택 추가: $option (현재 ${selectedTravelActivities.size}/3)"
+                    "SurveyActivity",
+                    "선택 추가: $option (현재 ${selectedTravelActivities.size}/3)"
                 )
 
                 // 3개 선택 완료 시 progress 100%로 설정
-                if (selectedTravelActivities.isNotEmpty() ) {
+//                if (selectedTravelActivities.isNotEmpty()) {
+                if (selectedTravelActivities.size ==3) {
                     android.util.Log.d(
-                            "SurveyActivity",
-                            "3개 선택 완료! 선택된 활동: $selectedTravelActivities"
+                        "SurveyActivity",
+                        "3개 선택 완료! 선택된 활동: $selectedTravelActivities"
                     )
                     // progress를 100%로 설정
                     progressBar.progress = 100
@@ -214,15 +240,11 @@ class SurveyActivity : AppCompatActivity() {
             }
         }
 
-        // 선택 상태 변경 후 완료 버튼 상태 업데이트
-        android.util.Log.d(
-                "SurveyActivity",
-                "updateCompleteButtonState() 호출 전 - 선택된 개수: ${selectedTravelActivities.size}"
-        )
+
         updateCompleteButtonState()
         android.util.Log.d(
-                "SurveyActivity",
-                "updateCompleteButtonState() 호출 후 - 완료 버튼 활성화: ${btnComplete.isEnabled}"
+            "SurveyActivity",
+            "updateCompleteButtonState() 호출 후 - 완료 버튼 활성화: ${btnComplete.isEnabled}"
         )
     }
 
@@ -231,18 +253,15 @@ class SurveyActivity : AppCompatActivity() {
     }
 
     private fun showChoiceButtons() {
-        btnChoice1.visibility = View.VISIBLE
-        btnChoice2.visibility = View.VISIBLE
+        btnChoice1.visibility = View.VISIBLE ; btnChoice2.visibility = View.VISIBLE
     }
 
     private fun hideChoiceButtons() {
-        btnChoice1.visibility = View.GONE
-        btnChoice2.visibility = View.GONE
+        btnChoice1.visibility = View.GONE ; btnChoice2.visibility = View.GONE
     }
 
     private fun showPrevButton() {
-        btnPrev.visibility = View.VISIBLE
-        btnComplete.visibility = View.GONE
+        btnPrev.visibility = View.VISIBLE ; btnComplete.visibility = View.GONE
     }
 
     private fun showCompleteButton() {
@@ -252,21 +271,19 @@ class SurveyActivity : AppCompatActivity() {
     }
 
     private fun updateProgress() {
-        val surveyList = SurveyList().surveyList
         // 진행률 계산 수정: 0~100% 범위로 표시
         val progress = ((currentIndex) * 100) / surveyList.size
         progressBar.progress = progress
 
         // 디버깅: 진행률 계산 확인
         android.util.Log.d(
-                "SurveyActivity",
-                "진행률 업데이트: currentIndex=$currentIndex, progress=$progress%, total=${surveyList.size}"
+            "SurveyActivity",
+            "진행률 업데이트: currentIndex=$currentIndex, progress=$progress%, total=${surveyList.size}"
         )
     }
 
     /** 마지막 설문에서의 progress 업데이트 (선택 개수에 따라) */
     private fun updateProgressForLastSurvey() {
-        val surveyList = SurveyList().surveyList
         val baseProgress = ((currentIndex) * 100) / surveyList.size // 기본 progress
 
         // 선택된 개수에 따라 추가 progress 계산
@@ -276,39 +293,39 @@ class SurveyActivity : AppCompatActivity() {
         progressBar.progress = totalProgress
 
         android.util.Log.d(
-                "SurveyActivity",
-                "마지막 설문 Progress: 기본=$baseProgress%, 선택=$selectionProgress%, 총=$totalProgress% (${selectedTravelActivities.size}/3)"
+            "SurveyActivity",
+            "마지막 설문 Progress: 기본=$baseProgress%, 선택=$selectionProgress%, 총=$totalProgress% (${selectedTravelActivities.size}/3)"
         )
     }
 
     /** 완료 버튼의 활성화/비활성화 상태 업데이트 */
     private fun updateCompleteButtonState() {
         android.util.Log.d(
-                "SurveyActivity",
-                "updateCompleteButtonState() 시작 - 선택된 개수: ${selectedTravelActivities.size}"
+            "SurveyActivity",
+            "updateCompleteButtonState() 시작 - 선택된 개수: ${selectedTravelActivities.size}"
         )
 
-        if (selectedTravelActivities.isEmpty()) {
-            // 선택된 것이 없으면 비활성화
+        if (selectedTravelActivities.size < 3) {
+            // 3개 미만이면 비활성화
             btnComplete.isEnabled = false
             btnComplete.background = getDrawable(R.drawable.button_complete_disabled)
             btnComplete.setTextColor(getColor(android.R.color.darker_gray))
-            android.util.Log.d("SurveyActivity", "완료 버튼 비활성화 (선택 없음) - 회색 배경")
+            android.util.Log.d("SurveyActivity", "완료 버튼 비활성화 (3개 미만) - 회색 배경")
         } else {
-            // 선택된 것이 있으면 활성화 (주황색 배경)
+            // 3개 이상이면 활성화 (주황색 배경)
             btnComplete.isEnabled = true
             btnComplete.backgroundTintList =
-                    getColorStateList(R.color.mainColor) // mainColor 주황색 사용
+                getColorStateList(R.color.mainColor) // mainColor 주황색 사용
             btnComplete.setTextColor(getColor(android.R.color.white))
             android.util.Log.d(
-                    "SurveyActivity",
-                    "완료 버튼 활성화 (${selectedTravelActivities.size}개 선택) - 주황색"
+                "SurveyActivity",
+                "완료 버튼 활성화 (${selectedTravelActivities.size}개 선택) - 주황색"
             )
         }
 
         android.util.Log.d(
-                "SurveyActivity",
-                "updateCompleteButtonState() 완료 - 버튼 활성화: ${btnComplete.isEnabled}"
+            "SurveyActivity",
+            "updateCompleteButtonState() 완료 - 버튼 활성화: ${btnComplete.isEnabled}"
         )
     }
 
@@ -338,24 +355,79 @@ class SurveyActivity : AppCompatActivity() {
         android.util.Log.d("SurveyActivity", "버튼 색상 변경: ${selectedButton.text} -> 주황색")
     }
 
+    private fun saveAnswer(surveyId: Int, selectedText: String) {
+        // TODO: 필요시 구현
+    }
+
+    /** ViewModel 상태 관찰 */
+    private fun observeViewModel() {
+        surveyViewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                // 로딩 상태 표시
+                btnComplete.isEnabled = false
+                btnComplete.text = "전송 중..."
+            } else {
+                // 로딩 완료
+                btnComplete.isEnabled = true
+                btnComplete.text = "완료"
+            }
+        }
+
+        surveyViewModel.submitSuccess.observe(this) { success ->
+            if (success) {
+                android.util.Log.d("SurveyActivity", "설문 제출 성공!")
+                // TODO: 성공 화면으로 이동 또는 완료 메시지 표시
+                showSuccessMessage()
+            }
+        }
+
+        surveyViewModel.submitError.observe(this) { error ->
+            error?.let {
+                android.util.Log.e("SurveyActivity", "설문 제출 실패: $it")
+                // TODO: 에러 메시지 표시
+                showErrorMessage(it)
+            }
+        }
+    }
+
     /** 설문 결과를 서버에 전송 */
     private fun submitSurveyToServer() {
         if (selectedTravelActivities.size < 3) {
             android.util.Log.d("SurveyActivity", "3개를 모두 선택해주세요!")
-            // TODO: 사용자에게 알림 표시
+            showToast("3개를 모두 선택해주세요!")
             return
         }
 
         android.util.Log.d("SurveyActivity", "서버에 설문 결과 전송 시작...")
         android.util.Log.d("SurveyActivity", "선택된 여행 활동: $selectedTravelActivities")
 
-        // TODO: 실제 서버 API 호출
-        // 1. 사용자 닉네임
-        // 2. 설문 응답들
-        // 3. 선택된 여행 활동들
+        // 1. 선택된 활동들을 ViewModel에 반영
+        selectedTravelActivities.forEach { activity ->
+            surveyViewModel.toggleActivity(
+                activity,
+                SurveyElements(9, "여행 활동 선택", listOf(activity))
+            )
+        }
 
-        // 임시로 성공 처리
-        android.util.Log.d("SurveyActivity", "설문 제출 완료!")
+        // 2. ViewModel을 통해 서버에 전송
+        surveyViewModel.submitSurveyToServer()
+    }
+
+    /** 성공 메시지 표시 */
+    private fun showSuccessMessage() {
+        showToast("설문 제출이 완료되었습니다!")
         // TODO: 결과 화면으로 이동
+        // startActivity(Intent(this, SurveyResultActivity::class.java))
+        // finish()
+    }
+
+    /** 에러 메시지 표시 */
+    private fun showErrorMessage(error: String) {
+        showToast("오류: $error")
+    }
+
+    /** Toast 메시지 표시 */
+    private fun showToast(message: String) {
+        android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
     }
 }
