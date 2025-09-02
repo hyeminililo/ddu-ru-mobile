@@ -3,61 +3,40 @@ package com.gildongmu.ddu_ru_mobile.model.signup.api
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gildongmu.ddu_ru_mobile.BuildConfig
 import com.gildongmu.ddu_ru_mobile.model.signup.survey.Servey
 import com.gildongmu.ddu_ru_mobile.model.signup.survey.SurveyElements
+import com.gildongmu.ddu_ru_mobile.network.ApiClient
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SurveyViewModel : ViewModel() {
-    val currentIndex = MutableLiveData(0)
     val nickName = MutableLiveData<String>()
-
-    // Todo : 이렇게 하면 suerveyList의 값이 아니라 survey에 Null이 들어가는건지 확인해야할듯
     val surveyResult = MutableLiveData<Servey>(Servey())
     val selectedActivities: MutableSet<String> = mutableSetOf()
-    
-    // API 상태 관리
+
     val isLoading = MutableLiveData<Boolean>(false)
     val submitSuccess = MutableLiveData<Boolean>(false)
     val submitError = MutableLiveData<String?>(null)
 
-    // Retrofit 설정
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    private  val surveyApiService = ApiClient.apiService
 
-    private val surveyApiService = retrofit.create(SurveyApiService::class.java)
-
-    fun setNickName(newNickName: String) {
-        nickName.value = newNickName
-    }
+    fun setNickName(newNickName: String) { nickName.value = newNickName }
 
     fun setSingleOption(choiceIndex: Int, surveyItem: SurveyElements) {
         surveyResult.value = surveyResult.value?.apply {
             when (surveyItem.surveyId) {
                 1 -> planStyle = if (choiceIndex == 0) Servey.PlanStyle.PLANNER else Servey.PlanStyle.FREE
-
                 2 -> tastingStyle = if (choiceIndex == 0) Servey.TastingStyle.WAIT else Servey.TastingStyle.NEARBY
-
                 3 -> stayStyle = if (choiceIndex == 0) Servey.StayStyle.HOTEL else Servey.StayStyle.JUST_SLEEP
-
                 4 -> expenseStyle = if (choiceIndex == 0) Servey.ExpenseStyle.EACH_PAYS else Servey.ExpenseStyle.POOLED
-
                 5 -> moveStyle = if (choiceIndex == 0) Servey.MoveStyle.WALK_BUS else Servey.MoveStyle.TAXI
-
                 6 -> spendStyle = if (choiceIndex == 0) Servey.SpendStyle.SPLURGE else Servey.SpendStyle.SAVER
-
                 7 -> captureStyle = if (choiceIndex == 0) Servey.CaptureStyle.PHOTO else Servey.CaptureStyle.EYES
-
                 8 -> paceStyle = if (choiceIndex == 0) Servey.PaceStyle.EARLY_FULL else Servey.PaceStyle.RELAXED
             }
         }
     }
 
-    private val interestMap = mapOf( // CHANGED
+    private val interestMap = mapOf(
         "관광" to Servey.Interest.SIGHTSEEING,
         "관람" to Servey.Interest.EXHIBITION,
         "자연 탐방" to Servey.Interest.NATURE,
@@ -69,27 +48,15 @@ class SurveyViewModel : ViewModel() {
         "페스티벌" to Servey.Interest.FESTIVAL
     )
 
-    fun toggleActivity(choiceKorean: String, surveyItem: SurveyElements) {
-        if (surveyItem.surveyId != 9) return
+    fun toggleActivity(choiceKorean: String) {
         surveyResult.value = surveyResult.value?.apply {
             if (selectedActivities.contains(choiceKorean)) selectedActivities.remove(choiceKorean)
             else if (selectedActivities.size < 3) selectedActivities.add(choiceKorean)
         }
-
     }
 
-    fun submitSurvey() {
+    fun clearServeyList() { surveyResult.value = Servey() }
 
-    }
-
-
-    fun <T> setSurveyOption(update: Servey.() -> Unit) {
-        surveyResult.value = surveyResult.value?.apply(update)
-    }
-
-    fun clearServeyList() {
-        surveyResult.value = Servey()
-    }
     fun finalizeInterests() {
         surveyResult.value = surveyResult.value?.apply {
             interests = if(selectedActivities.isNotEmpty()){
@@ -97,23 +64,41 @@ class SurveyViewModel : ViewModel() {
             } else null
         }
     }
+    private fun Servey.toRequest(nickName: String): TravelPreferenceRequest {
+        val list = mutableListOf<String>()
 
-    fun submitSurveyToServer() {
+        planStyle?.name?.let { list.add(it) }
+        tastingStyle?.name?.let { list.add(it) }
+        stayStyle?.name?.let { list.add(it) }
+        expenseStyle?.name?.let { list.add(it) }
+        moveStyle?.name?.let { list.add(it) }
+        spendStyle?.name?.let { list.add(it) }
+        captureStyle?.name?.let { list.add(it) }
+        paceStyle?.name?.let { list.add(it) }
+
+        interests?.forEach { list.add(it.name) }
+
+        return TravelPreferenceRequest(
+            surveyVersion = 1,                 // TODO: 버전 관리 필요하면 상수나 BuildConfig로 뺄 것
+            nickName = nickName,
+            preferencesList = if (list.isNotEmpty()) list else null
+        )
+    }
+
+    fun submitSurveyToServer(userId: String = "tem") {
         viewModelScope.launch {
             try {
                 isLoading.value = true
                 submitError.value = null
-                
-                // interests 최종화
+
                 finalizeInterests()
-                
-                // 서버 전송 데이터 준비
-                val surveyData = surveyResult.value?.toServerMap()
-                    ?: throw Exception("설문 데이터가 없습니다")
-                
+
+                //Todo : 나중에 로그인 하면 기본 user정보로 바꾸기
+                val request = surveyResult.value?.toRequest(nickName.value ?: "")
+                    ?: throw IllegalStateException("설문데이터가 없습니다.")
                 // API 호출
-                val response = surveyApiService.submitSurvey(surveyData)
-                
+                val response = surveyApiService.sendTravelPreference(userId ,request)
+
                 if (response.isSuccessful) {
                     submitSuccess.value = true
                 } else {
