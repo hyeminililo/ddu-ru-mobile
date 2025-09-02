@@ -55,7 +55,13 @@ class SurveyViewModel : ViewModel() {
         }
     }
 
-    fun clearServeyList() { surveyResult.value = Servey() }
+    fun resetSurveyKeepNickname(){
+        surveyResult.value = Servey()
+        selectedActivities.clear()
+        submitSuccess.value = false
+        submitError.value = null
+        isLoading.value = false
+    }
 
     fun finalizeInterests() {
         surveyResult.value = surveyResult.value?.apply {

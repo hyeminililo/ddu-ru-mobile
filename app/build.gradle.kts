@@ -51,6 +51,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        viewBinding = true
     }
 
 
@@ -74,4 +75,7 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.bundles.androidx.lifecycle)
 }

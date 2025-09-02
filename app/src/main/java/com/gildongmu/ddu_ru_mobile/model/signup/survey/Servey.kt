@@ -11,7 +11,6 @@ class Servey {
     var paceStyle : PaceStyle? = null
     var interests :  Set<Interest>? = null
 
-    // Todo Pair로 해서 두개 중 하나 선택해서 넣는게 어떨지 ,,
     enum class PlanStyle { PLANNER, FREE }
 
     enum class TastingStyle { WAIT, NEARBY }

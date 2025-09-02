@@ -1,6 +1,5 @@
 package com.gildongmu.ddu_ru_mobile.ui.signup
 
-import android.R.id.toggle
 import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar

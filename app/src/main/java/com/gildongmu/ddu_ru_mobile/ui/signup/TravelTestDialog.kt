@@ -2,41 +2,37 @@ package com.gildongmu.ddu_ru_mobile.ui.signup
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
+import androidx.fragment.app.activityViewModels
 import com.gildongmu.ddu_ru_mobile.R
+import com.gildongmu.ddu_ru_mobile.databinding.DialogTravelPreferenceTestStartBinding
 import com.gildongmu.ddu_ru_mobile.model.signup.api.SurveyViewModel
-import com.gildongmu.ddu_ru_mobile.model.signup.survey.Servey
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class TravelTestDialog : BottomSheetDialogFragment() {
-    private val signupViewModel = SurveyViewModel()
+class TravelTestDialog
+    : BottomSheetDialogFragment(R.layout.dialog_travel_preference_test_start) {
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    private var _binding: DialogTravelPreferenceTestStartBinding? = null
+    private val binding get() = _binding!!   // onViewCreated~onDestroyView 사이에서만 사용
 
-        val view = inflater.inflate(R.layout.dialog_travel_preference_test_start, container, false)
+    private val surveyViewModel: SurveyViewModel by activityViewModels()
 
-        view.findViewById<Button>(R.id.btnLater).setOnClickListener {
-            // surveyResult 초기화
-            signupViewModel.surveyResult.value = Servey()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _binding = DialogTravelPreferenceTestStartBinding.bind(view)
 
-            Log.d("survey ===========", "${signupViewModel.nickName.value}")
-            Log.d("survey ===========", "${signupViewModel.surveyResult.value}")
+        binding.btnLater.setOnClickListener {
+            surveyViewModel.resetSurveyKeepNickname()
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.btnStart).setOnClickListener {
+        binding.btnStart.setOnClickListener {
             dismiss()
             startActivity(Intent(requireContext(), SurveyActivity::class.java))
         }
+    }
 
-        return view
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
